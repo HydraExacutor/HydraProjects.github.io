@@ -1,355 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Trombone Champ Save Editor</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
-    margin: 0; padding: 0;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  header {
-    background-color: #4a90e2;
-    padding: 1.5rem 1rem;
-    color: white;
-    text-align: center;
-    font-weight: 700;
-    font-size: 2rem;
-    letter-spacing: 1.5px;
-  }
-  main {
-    flex-grow: 1;
-    max-width: 600px;
-    margin: 2rem auto;
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgb(0 0 0 / 0.1);
-  }
-  h2 {
-    margin-top: 0;
-    color: #4a90e2;
-    font-weight: 600;
-  }
-  p.instructions {
-    font-size: 0.95rem;
-    color: #555;
-    line-height: 1.5;
-    margin-bottom: 2rem;
-  }
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-  }
-  .toggle-container {
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .toggle-container input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-  }
-  .input-group {
-    margin-bottom: 1.8rem;
-  }
-  input[type="number"],
-  input[type="range"],
-  input[type="file"] {
-    width: 100%;
-    padding: 6px 10px;
-    font-size: 1rem;
-    border: 1.5px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-  }
-  input[type="range"] {
-    -webkit-appearance: none;
-    height: 6px;
-    background: #ddd;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-top: 6px;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    background: #4a90e2;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-top: -6px;
-  }
-  button {
-    display: block;
-    width: 100%;
-    background-color: #4a90e2;
-    color: white;
-    font-weight: 700;
-    font-size: 1.2rem;
-    padding: 1rem 0;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  button:hover,
-  button:focus {
-    background-color: #357abd;
-    outline: none;
-  }
-  .footer-link {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-  }
-  .footer-link a {
-    color: #4a90e2;
-    text-decoration: none;
-  }
-  .footer-link a:hover,
-  .footer-link a:focus {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trombone Champ Save Editor</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+
+    header {
+      background-color: #1e90ff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 2em;
+      font-weight: bold;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #1e90ff;
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input[type="range"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 8px;
+      background: #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      background-color: #1e90ff;
+      border-radius: 50%;
+      margin-top: -6px;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      height: 20px;
+      width: 20px;
+      background-color: #1e90ff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    button {
+      background-color: #1e90ff;
+      color: white;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1c86ee;
+    }
+
+    .file-upload {
+      margin-bottom: 25px;
+    }
+
+    .file-upload input {
+      display: block;
+      margin-top: 10px;
+    }
+
+    .section-title {
+      margin-top: 40px;
+      font-size: 1.3rem;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
-  <header>Trombone Champ Save Editor</header>
+  <header>
+    Trombone Champ Save Editor
+  </header>
   <main>
-    <h2>Where to find your save files</h2>
-    <p class="instructions">
-      On macOS: <br />
-      <code>/Users/yourusername/Library/Application Support/com.holywowstudios.trombonechamp/tchamp_savev100_0.dat</code> <br /><br />
-      On Windows: <br />
-      <code>C:\Users\yourusername\AppData\LocalLow\Holy Wow Studios\Trombone Champ\tchamp_savev100_0.dat</code>
-    </p>
-
-    <form id="saveEditorForm">
-      <label for="fileMain">Upload <code>tchamp_savev100_0.dat</code>:</label>
-      <input type="file" id="fileMain" accept=".dat" required />
-      <label for="fileBackup">Upload <code>tchamp_savev100_0_BACKUP.dat</code>:</label>
-      <input type="file" id="fileBackup" accept=".dat" required />
-
-      <div class="toggle-container">
-        <input type="checkbox" id="toggleToots" checked />
-        <label for="toggleToots">Edit Toots</label>
+    <form id="editorForm">
+      <div class="file-upload">
+        <label for="mainSave">Upload tchamp_savev100_0.dat</label>
+        <input type="file" id="mainSave" accept=".dat" required />
       </div>
+
+      <div class="file-upload">
+        <label for="backupSave">Upload tchamp_savev100_0_BACKUP.dat</label>
+        <input type="file" id="backupSave" accept=".dat" required />
+      </div>
+
       <div class="input-group">
         <label for="tootsRange">Number of Toots</label>
-        <input type="range" id="tootsRange" min="0" max="4294967295" value="0" />
-        <input type="number" id="tootsInput" min="0" max="4294967295" value="0" />
+        <input type="range" id="tootsRange" min="0" max="4294967295" value="0">
+        <input type="number" id="tootsInput" min="0" max="4294967295" value="0">
       </div>
 
-      <div class="toggle-container">
-        <input type="checkbox" id="toggleTurds" checked />
-        <label for="toggleTurds">Edit Turds</label>
-      </div>
       <div class="input-group">
         <label for="turdsRange">Number of Turds</label>
-        <input type="range" id="turdsRange" min="0" max="4294967295" value="0" />
-        <input type="number" id="turdsInput" min="0" max="4294967295" value="0" />
+        <input type="range" id="turdsRange" min="0" max="4294967295" value="0">
+        <input type="number" id="turdsInput" min="0" max="4294967295" value="0">
       </div>
 
-      <button type="submit">Update Save</button>
+      <button type="submit">Download Edited Save Files</button>
     </form>
 
-    <div class="footer-link">
-      <a href="instructions.html">Back to Instructions</a>
-    </div>
+    <div class="section-title">Instructions</div>
+    <p>
+      <strong>Mac:</strong><br>
+      1. Enter Trombone Champ and note your current number of toots/turds.<br>
+      2. Go to <code>/Users/&lt;your-name&gt;/Library/Application Support/com.holywowstudios.trombonechamp/</code><br>
+      3. Copy both <code>tchamp_savev100_0.dat</code> and <code>tchamp_savev100_0_BACKUP.dat</code> somewhere safe as a backup.<br>
+      4. Upload both files to the editor, choose your new numbers, and download the edited files.<br>
+      5. Replace the old files in the folder with the new ones.<br>
+      6. Reopen Trombone Champ and enjoy!
+    </p>
+    <p>
+      <strong>Windows:</strong><br>
+      1. Enter Trombone Champ and note your current number of toots/turds.<br>
+      2. Navigate to <code>C:\Users\&lt;YourName&gt;\AppData\LocalLow\Holy Wow Studios\Trombone Champ\</code><br>
+      3. Backup your save files.<br>
+      4. Use this editor to upload and modify your save.<br>
+      5. Replace the old files with the new ones.<br>
+      6. Launch the game and enjoy!
+    </p>
   </main>
 
-<script>
-  // Sync range and number inputs for toots
-  const tootsRange = document.getElementById('tootsRange');
-  const tootsInput = document.getElementById('tootsInput');
-  tootsRange.addEventListener('input', () => {
-    tootsInput.value = tootsRange.value;
-  });
-  tootsInput.addEventListener('input', () => {
-    let val = parseInt(tootsInput.value);
-    if (isNaN(val) || val < 0) val = 0;
-    if (val > 4294967295) val = 4294967295;
-    tootsInput.value = val;
-    tootsRange.value = val;
-  });
+  <script>
+    const maxVal = 4294967295;
 
-  // Sync range and number inputs for turds
-  const turdsRange = document.getElementById('turdsRange');
-  const turdsInput = document.getElementById('turdsInput');
-  turdsRange.addEventListener('input', () => {
-    turdsInput.value = turdsRange.value;
-  });
-  turdsInput.addEventListener('input', () => {
-    let val = parseInt(turdsInput.value);
-    if (isNaN(val) || val < 0) val = 0;
-    if (val > 4294967295) val = 4294967295;
-    turdsInput.value = val;
-    turdsRange.value = val;
-  });
+    function syncSliderAndInput(rangeId, inputId) {
+      const range = document.getElementById(rangeId);
+      const input = document.getElementById(inputId);
 
-  // Toggle enable/disable inputs
-  document.getElementById('toggleToots').addEventListener('change', (e) => {
-    const enabled = e.target.checked;
-    tootsRange.disabled = !enabled;
-    tootsInput.disabled = !enabled;
-  });
-  document.getElementById('toggleTurds').addEventListener('change', (e) => {
-    const enabled = e.target.checked;
-    turdsRange.disabled = !enabled;
-    turdsInput.disabled = !enabled;
-  });
+      range.addEventListener('input', () => {
+        input.value = range.value;
+      });
 
-  // Convert number to 4-byte little endian Uint8Array
-  function toLittleEndian4Bytes(num) {
-    const arr = new Uint8Array(4);
-    arr[0] = num & 0xff;
-    arr[1] = (num >> 8) & 0xff;
-    arr[2] = (num >> 16) & 0xff;
-    arr[3] = (num >> 24) & 0xff;
-    return arr;
-  }
-
-  // Find & replace 4-byte LE number in file buffer (replace first occurrence)
-  function findAndReplace(buffer, currentNum, newNum) {
-    const arr = new Uint8Array(buffer);
-    const currentBytes = toLittleEndian4Bytes(currentNum);
-    const newBytes = toLittleEndian4Bytes(newNum);
-
-    for (let i = 0; i < arr.length - 3; i++) {
-      if (
-        arr[i] === currentBytes[0] &&
-        arr[i + 1] === currentBytes[1] &&
-        arr[i + 2] === currentBytes[2] &&
-        arr[i + 3] === currentBytes[3]
-      ) {
-        arr[i] = newBytes[0];
-        arr[i + 1] = newBytes[1];
-        arr[i + 2] = newBytes[2];
-        arr[i + 3] = newBytes[3];
-        break;
-      }
+      input.addEventListener('input', () => {
+        let val = parseInt(input.value);
+        if (isNaN(val) || val < 0) val = 0;
+        if (val > maxVal) val = maxVal;
+        input.value = val;
+        range.value = val;
+      });
     }
-    return arr.buffer;
-  }
 
-  // Read file as ArrayBuffer
-  function readFileAsArrayBuffer(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.onerror = e => reject(e);
-      reader.readAsArrayBuffer(file);
+    syncSliderAndInput("tootsRange", "tootsInput");
+    syncSliderAndInput("turdsRange", "turdsInput");
+
+    document.getElementById("editorForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const toots = parseInt(document.getElementById("tootsInput").value);
+      const turds = parseInt(document.getElementById("turdsInput").value);
+      alert(`Edited save with Toots: ${toots}, Turds: ${turds}. Save logic not implemented.`);
+      // Add file processing logic here
     });
-  }
-
-  // Prompt user to enter current toot and turd counts (needed to find and replace in files)
-  async function promptCurrentValues(enabledToots, enabledTurds) {
-    let currentToots = 0;
-    let currentTurds = 0;
-
-    if (enabledToots) {
-      const input = prompt('Enter your CURRENT number of Toots (as shown in-game)');
-      currentToots = parseInt(input);
-      if (isNaN(currentToots) || currentToots < 0) {
-        alert('Invalid current Toots value. Aborting.');
-        throw new Error('Invalid current Toots value');
-      }
-    }
-    if (enabledTurds) {
-      const input = prompt('Enter your CURRENT number of Turds (as shown in-game)');
-      currentTurds = parseInt(input);
-      if (isNaN(currentTurds) || currentTurds < 0) {
-        alert('Invalid current Turds value. Aborting.');
-        throw new Error('Invalid current Turds value');
-      }
-    }
-
-    return { currentToots, currentTurds };
-  }
-
-  // Download edited file
-  function downloadEditedFile(buffer, filename) {
-    const blob = new Blob([buffer], { type: 'application/octet-stream' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
-
-  // Handle form submission
-  document.getElementById('saveEditorForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const fileMain = document.getElementById('fileMain').files[0];
-    const fileBackup = document.getElementById('fileBackup').files[0];
-
-    if (!fileMain || !fileBackup) {
-      alert('Please upload both save files.');
-      return;
-    }
-
-    const editToots = document.getElementById('toggleToots').checked;
-    const editTurds = document.getElementById('toggleTurds').checked;
-
-    if (!editToots && !editTurds) {
-      alert('Please select at least one: Edit Toots or Edit Turds.');
-      return;
-    }
-
-    let newToots = 0;
-    let newTurds = 0;
-
-    if (editToots) {
-      newToots = parseInt(document.getElementById('tootsInput').value);
-    }
-    if (editTurds) {
-      newTurds = parseInt(document.getElementById('turdsInput').value);
-    }
-
-    // Prompt current values so we can find and replace them in files
-    let currentVals;
-    try {
-      currentVals = await promptCurrentValues(editToots, editTurds);
-    } catch {
-      return;
-    }
-
-    try {
-      // Read files as buffers
-      let mainBuffer = await readFileAsArrayBuffer(fileMain);
-      let backupBuffer = await readFileAsArrayBuffer(fileBackup);
-
-      // Replace in main file
-      if (editToots) {
-        mainBuffer = findAndReplace(mainBuffer, currentVals.currentToots, newToots);
-        backupBuffer = findAndReplace(backupBuffer, currentVals.currentToots, newToots);
-      }
-      if (editTurds) {
-        mainBuffer = findAndReplace(mainBuffer, currentVals.currentTurds, newTurds);
-        backupBuffer = findAndReplace(backupBuffer, currentVals.currentTurds, newTurds);
-      }
-
-      // Download updated files with original names
-      downloadEditedFile(mainBuffer, fileMain.name);
-      downloadEditedFile(backupBuffer, fileBackup.name);
-
-      alert('Save files updated and downloaded. Replace the originals with these edited files.');
-    } catch (error) {
-      alert('Error processing files: ' + error.message);
-    }
-  });
-</script>
+  </script>
 </body>
 </html>
