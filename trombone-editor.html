@@ -1,143 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trombone Champ Save Editor</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-      text-align: center;
-    }
-    input[type="number"] {
-      width: 80px;
-    }
-    .file-upload {
-      margin: 10px 0;
-    }
-    .section {
-      margin-top: 20px;
-      padding: 15px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-    label {
-      margin-right: 10px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trombone Champ Save Editor</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    margin: 0; padding: 0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background-color: #4a90e2;
+    padding: 1.5rem 1rem;
+    color: white;
+    text-align: center;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 1.5px;
+  }
+  main {
+    flex-grow: 1;
+    max-width: 600px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgb(0 0 0 / 0.1);
+  }
+  h2 {
+    margin-top: 0;
+    color: #4a90e2;
+    font-weight: 600;
+  }
+  p.instructions {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+  }
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  .toggle-container {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .toggle-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  .input-group {
+    margin-bottom: 1.8rem;
+  }
+  input[type="number"],
+  input[type="range"] {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 1rem;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #4a90e2;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -6px;
+  }
+  button {
+    display: block;
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 1rem 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover,
+  button:focus {
+    background-color: #357abd;
+    outline: none;
+  }
+  .footer-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  .footer-link a {
+    color: #4a90e2;
+    text-decoration: none;
+  }
+  .footer-link a:hover,
+  .footer-link a:focus {
+    text-decoration: underline;
+  }
+</style>
 </head>
 <body>
-  <h1>Trombone Champ Save Editor</h1>
+  <header>Trombone Champ Save Editor</header>
+  <main>
+    <h2>Where to find your save files</h2>
+    <p class="instructions">
+      On macOS: <br />
+      <code>/Users/yourusername/Library/Application Support/com.holywowstudios.trombonechamp/tchamp_savev100_0.dat</code> <br /><br />
+      On Windows: <br />
+      <code>C:\Users\yourusername\AppData\LocalLow\Holy Wow Studios\Trombone Champ\tchamp_savev100_0.dat</code>
+    </p>
 
-  <div class="section">
-    <h3>Upload Save Files</h3>
-    <input type="file" id="mainFile" class="file-upload" /><br />
-    <input type="file" id="backupFile" class="file-upload" />
-  </div>
+    <form id="saveEditorForm">
+      <div class="toggle-container">
+        <input type="checkbox" id="toggleToots" checked />
+        <label for="toggleToots">Edit Toots</label>
+      </div>
+      <div class="input-group">
+        <label for="tootsRange">Number of Toots</label>
+        <input type="range" id="tootsRange" min="0" max="65535" value="0" />
+        <input type="number" id="tootsInput" min="0" max="65535" value="0" />
+      </div>
 
-  <div class="section">
-    <h3>Edit Options</h3>
-    <label><input type="checkbox" id="editToots" checked /> Edit Toots</label>
-    <label><input type="checkbox" id="editTurds" /> Edit Turds</label><br /><br />
+      <div class="toggle-container">
+        <input type="checkbox" id="toggleTurds" checked />
+        <label for="toggleTurds">Edit Turds</label>
+      </div>
+      <div class="input-group">
+        <label for="turdsRange">Number of Turds</label>
+        <input type="range" id="turdsRange" min="0" max="65535" value="0" />
+        <input type="number" id="turdsInput" min="0" max="65535" value="0" />
+      </div>
 
-    <label>Current Toots:</label>
-    <input type="number" id="currentToots" min="0" />
-    <label>New Toots:</label>
-    <input type="range" id="newTootsRange" min="0" max="9999999" value="10000" />
-    <input type="number" id="newToots" value="10000" /><br /><br />
+      <button type="submit">Update Save</button>
+    </form>
 
-    <label>Current Turds:</label>
-    <input type="number" id="currentTurds" min="0" />
-    <label>New Turds:</label>
-    <input type="range" id="newTurdsRange" min="0" max="9999999" value="10000" />
-    <input type="number" id="newTurds" value="10000" />
-  </div>
+    <div class="footer-link">
+      <a href="instructions.html">Back to Instructions</a>
+    </div>
+  </main>
 
-  <div class="section">
-    <button onclick="processFile()">Apply Changes & Download</button>
-    <p id="status"></p>
-  </div>
+<script>
+  // Sync range and number inputs for toots
+  const tootsRange = document.getElementById('tootsRange');
+  const tootsInput = document.getElementById('tootsInput');
+  tootsRange.addEventListener('input', () => {
+    tootsInput.value = tootsRange.value;
+  });
+  tootsInput.addEventListener('input', () => {
+    let val = parseInt(tootsInput.value);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > 65535) val = 65535;
+    tootsInput.value = val;
+    tootsRange.value = val;
+  });
 
-  <script>
-    function toLittleEndianBytes(num) {
-      const arr = new Uint8Array(4);
-      const view = new DataView(arr.buffer);
-      view.setUint32(0, num, true);
-      return Array.from(arr);
-    }
+  // Sync range and number inputs for turds
+  const turdsRange = document.getElementById('turdsRange');
+  const turdsInput = document.getElementById('turdsInput');
+  turdsRange.addEventListener('input', () => {
+    turdsInput.value = turdsRange.value;
+  });
+  turdsInput.addEventListener('input', () => {
+    let val = parseInt(turdsInput.value);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > 65535) val = 65535;
+    turdsInput.value = val;
+    turdsRange.value = val;
+  });
 
-    function findAndReplace(buffer, currentValue, newValue) {
-      const curBytes = toLittleEndianBytes(currentValue);
-      const newBytes = toLittleEndianBytes(newValue);
+  // Toggle enable/disable inputs
+  document.getElementById('toggleToots').addEventListener('change', (e) => {
+    const enabled = e.target.checked;
+    tootsRange.disabled = !enabled;
+    tootsInput.disabled = !enabled;
+  });
+  document.getElementById('toggleTurds').addEventListener('change', (e) => {
+    const enabled = e.target.checked;
+    turdsRange.disabled = !enabled;
+    turdsInput.disabled = !enabled;
+  });
 
-      for (let i = 0; i <= buffer.length - 4; i++) {
-        if (
-          buffer[i] === curBytes[0] &&
-          buffer[i + 1] === curBytes[1] &&
-          buffer[i + 2] === curBytes[2] &&
-          buffer[i + 3] === curBytes[3]
-        ) {
-          buffer.set(newBytes, i);
-        }
-      }
-    }
+  // Handle form submission
+  document.getElementById('saveEditorForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Just placeholder behavior, you can hook your save editing logic here
+    let tootsEnabled = document.getElementById('toggleToots').checked;
+    let turdsEnabled = document.getElementById('toggleTurds').checked;
+    let tootsVal = tootsEnabled ? parseInt(tootsInput.value) : null;
+    let turdsVal = turdsEnabled ? parseInt(turdsInput.value) : null;
 
-    document.getElementById("newTootsRange").addEventListener("input", e => {
-      document.getElementById("newToots").value = e.target.value;
-    });
-    document.getElementById("newToots").addEventListener("input", e => {
-      document.getElementById("newTootsRange").value = e.target.value;
-    });
+    alert(`Editing Save with:\nToots: ${tootsVal === null ? 'unchanged' : tootsVal}\nTurds: ${turdsVal === null ? 'unchanged' : turdsVal}`);
+  });
+</script>
 
-    document.getElementById("newTurdsRange").addEventListener("input", e => {
-      document.getElementById("newTurds").value = e.target.value;
-    });
-    document.getElementById("newTurds").addEventListener("input", e => {
-      document.getElementById("newTurdsRange").value = e.target.value;
-    });
-
-    async function processFile() {
-      const mainFile = document.getElementById("mainFile").files[0];
-      const backupFile = document.getElementById("backupFile").files[0];
-
-      if (!mainFile || !backupFile) {
-        alert("Please upload both files.");
-        return;
-      }
-
-      const editToots = document.getElementById("editToots").checked;
-      const editTurds = document.getElementById("editTurds").checked;
-      const currentToots = parseInt(document.getElementById("currentToots").value);
-      const currentTurds = parseInt(document.getElementById("currentTurds").value);
-      const newToots = parseInt(document.getElementById("newToots").value);
-      const newTurds = parseInt(document.getElementById("newTurds").value);
-
-      if ((editToots && isNaN(currentToots)) || (editTurds && isNaN(currentTurds))) {
-        alert("Please enter your current toots/turds exactly.");
-        return;
-      }
-
-      const files = [mainFile, backupFile];
-
-      for (let file of files) {
-        const arrayBuffer = await file.arrayBuffer();
-        const byteArray = new Uint8Array(arrayBuffer);
-
-        if (editToots) findAndReplace(byteArray, currentToots, newToots);
-        if (editTurds) findAndReplace(byteArray, currentTurds, newTurds);
-
-        const blob = new Blob([byteArray]);
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = file.name;
-        a.click();
-      }
-
-      document.getElementById("status").innerText = "✅ Done! Your files should be downloading.";
-    }
-  </script>
 </body>
 </html>
