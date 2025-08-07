@@ -1,91 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trombone Champ Save Editor</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2em;
-      max-width: 600px;
-      margin: auto;
-      background: #f4f4f4;
-    }
-    h1 {
-      text-align: center;
-    }
-    label, input, button {
-      display: block;
-      margin: 1em 0;
-      width: 100%;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trombone Champ Save Editor</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: auto;
+    padding: 1rem;
+    background: #f9f9f9;
+  }
+  h1, h2 {
+    text-align: center;
+  }
+  .instructions {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f0f0f0;
+    border-radius: 8px;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+  input[type="file"],
+  input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+  }
+  button {
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .output {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #e0ffe0;
+    border: 1px solid #8bc34a;
+    border-radius: 6px;
+    display: none;
+  }
+</style>
 </head>
 <body>
-  <h1>Trombone Champ Save Editor</h1>
-  <input type="file" id="fileInput" />
 
-  <label for="currentToots">How many TOOTS do you currently have?</label>
-  <input type="number" id="currentToots" />
+<h1>Trombone Champ Save Editor</h1>
 
-  <label for="newToots">How many TOOTS do you want?</label>
-  <input type="number" id="newToots" />
+<div class="instructions">
+  <h2>Where to find your save files (.dat)</h2>
+  <p>
+    For <strong>Mac</strong>, look here:<br />
+    <code>/Users/your-username/Library/Application Support/com.holywowstudios.trombonechamp/</code><br /><br />
+    For <strong>Windows</strong>, the files are usually located in:<br />
+    <code>C:\Users\your-username\AppData\LocalLow\Holy Wow Studios\Trombone Champ\</code>
+  </p>
+  <p>
+    <a href="instructions.html">Click here for detailed editing instructions</a>
+  </p>
+</div>
 
-  <button onclick="modifySave()">Modify Save</button>
-  <a id="downloadLink" style="display:none">Download modified save</a>
+<form id="save-editor-form">
+  <label for="save-file">Select your <code>tchamp_savev100_0.dat</code> file:</label>
+  <input type="file" id="save-file" accept=".dat" required />
 
-  <script>
-    function toLittleEndianBytes(num) {
-      const hex = num.toString(16).padStart(4, '0');
-      return [parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(0, 2), 16)];
-    }
+  <label for="toots-input">Enter new number of <strong>toots</strong>:</label>
+  <input type="number" id="toots-input" min="0" max="65535" value="0" required />
 
-    function findAndReplace(buffer, findBytes, replaceBytes) {
-      const view = new Uint8Array(buffer);
-      for (let i = 0; i < view.length - findBytes.length; i++) {
-        if (findBytes.every((b, j) => view[i + j] === b)) {
-          for (let j = 0; j < replaceBytes.length; j++) {
-            view[i + j] = replaceBytes[j];
-          }
-          return true;
+  <label for="turds-input">Enter new number of <strong>turds</strong>:</label>
+  <input type="number" id="turds-input" min="0" max="65535" value="0" required />
+
+  <button type="submit">Edit Save File</button>
+</form>
+
+<div class="output" id="output-message"></div>
+
+<script>
+  // Helper: convert number to 2-byte little endian Uint8Array
+  function numberTo2BytesLE(num) {
+    const buffer = new ArrayBuffer(2);
+    const view = new DataView(buffer);
+    view.setUint16(0, num, true); // little endian
+    return new Uint8Array(buffer);
+  }
+
+  // Helper: find sequence of bytes in Uint8Array, return first index or -1
+  function findBytes(haystack, needle) {
+    for (let i = 0; i <= haystack.length - needle.length; i++) {
+      let found = true;
+      for (let j = 0; j < needle.length; j++) {
+        if (haystack[i + j] !== needle[j]) {
+          found = false;
+          break;
         }
       }
-      return false;
+      if (found) return i;
+    }
+    return -1;
+  }
+
+  document.getElementById('save-editor-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById('save-file');
+    if (!fileInput.files.length) {
+      alert('Please select your save file.');
+      return;
+    }
+    const toots = parseInt(document.getElementById('toots-input').value, 10);
+    const turds = parseInt(document.getElementById('turds-input').value, 10);
+
+    if (isNaN(toots) || toots < 0 || toots > 65535) {
+      alert('Please enter a valid number of toots (0 - 65535).');
+      return;
+    }
+    if (isNaN(turds) || turds < 0 || turds > 65535) {
+      alert('Please enter a valid number of turds (0 - 65535).');
+      return;
     }
 
-    function modifySave() {
-      const file = document.getElementById('fileInput').files[0];
-      const current = parseInt(document.getElementById('currentToots').value);
-      const desired = parseInt(document.getElementById('newToots').value);
+    const reader = new FileReader();
+    reader.onload = function () {
+      const data = new Uint8Array(reader.result);
 
-      if (!file || isNaN(current) || isNaN(desired)) {
-        alert("Please fill all fields and select a file.");
+      // Find the current toot and turd counts by searching for the pattern "currency_toots" and "currency_turds"
+      // Then locate the 2 bytes *after* the keyword where the value is stored (example offset 3 bytes after)
+      // These offsets might need adjustment based on actual save file format.
+
+      const encoder = new TextEncoder();
+
+      // Search keys as bytes
+      const tootsKey = encoder.encode('currency_toots');
+      const turdsKey = encoder.encode('currency_turds');
+
+      const tootsPos = findBytes(data, tootsKey);
+      const turdsPos = findBytes(data, turdsKey);
+
+      if (tootsPos === -1 || turdsPos === -1) {
+        alert('Could not find "currency_toots" or "currency_turds" in save file. This editor may not support your save format.');
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const buffer = e.target.result;
-        const currentBytes = toLittleEndianBytes(current);
-        const newBytes = toLittleEndianBytes(desired);
+      // Assuming values stored a few bytes after the key (usually 3 bytes offset; adjust if needed)
+      const tootsValuePos = tootsPos + tootsKey.length + 3;
+      const turdsValuePos = turdsPos + turdsKey.length + 3;
 
-        const success = findAndReplace(buffer, currentBytes, newBytes);
+      // Replace values with user input in little endian 2 bytes
+      const tootsBytes = numberTo2BytesLE(toots);
+      const turdsBytes = numberTo2BytesLE(turds);
 
-        if (!success) {
-          alert("Couldn't find the current value in the file.");
-          return;
-        }
+      data[tootsValuePos] = tootsBytes[0];
+      data[tootsValuePos + 1] = tootsBytes[1];
 
-        const blob = new Blob([buffer], { type: "application/octet-stream" });
-        const link = document.getElementById("downloadLink");
-        link.href = URL.createObjectURL(blob);
-        link.download = "modified_save.dat";
-        link.style.display = 'block';
-        link.textContent = "Download modified save";
-      };
-      reader.readAsArrayBuffer(file);
-    }
-  </script>
+      data[turdsValuePos] = turdsBytes[0];
+      data[turdsValuePos + 1] = turdsBytes[1];
+
+      // Create new Blob and download
+      const editedBlob = new Blob([data], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(editedBlob);
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = fileInput.files[0].name.replace('.dat', '_edited.dat');
+      downloadLink.textContent = 'Download Edited Save File';
+      downloadLink.style.display = 'block';
+      downloadLink.style.marginTop = '1rem';
+
+      const output = document.getElementById('output-message');
+      output.innerHTML = '<strong>Save file edited successfully!</strong><br />';
+      output.appendChild(downloadLink);
+      output.style.display = 'block';
+
+      // Clean up URL object when link is clicked
+      downloadLink.addEventListener('click', () => {
+        setTimeout(() => URL.revokeObjectURL(url), 100);
+      });
+    };
+
+    reader.readAsArrayBuffer(fileInput.files[0]);
+  });
+</script>
+
 </body>
 </html>
