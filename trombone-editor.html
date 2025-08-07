@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trombone Champ Save Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      max-width: 600px;
+      margin: auto;
+      background: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    label, input, button {
+      display: block;
+      margin: 1em 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Trombone Champ Save Editor</h1>
+  <input type="file" id="fileInput" />
+
+  <label for="currentToots">How many TOOTS do you currently have?</label>
+  <input type="number" id="currentToots" />
+
+  <label for="newToots">How many TOOTS do you want?</label>
+  <input type="number" id="newToots" />
+
+  <button onclick="modifySave()">Modify Save</button>
+  <a id="downloadLink" style="display:none">Download modified save</a>
+
+  <script>
+    function toLittleEndianBytes(num) {
+      const hex = num.toString(16).padStart(4, '0');
+      return [parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(0, 2), 16)];
+    }
+
+    function findAndReplace(buffer, findBytes, replaceBytes) {
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < view.length - findBytes.length; i++) {
+        if (findBytes.every((b, j) => view[i + j] === b)) {
+          for (let j = 0; j < replaceBytes.length; j++) {
+            view[i + j] = replaceBytes[j];
+          }
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function modifySave() {
+      const file = document.getElementById('fileInput').files[0];
+      const current = parseInt(document.getElementById('currentToots').value);
+      const desired = parseInt(document.getElementById('newToots').value);
+
+      if (!file || isNaN(current) || isNaN(desired)) {
+        alert("Please fill all fields and select a file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const buffer = e.target.result;
+        const currentBytes = toLittleEndianBytes(current);
+        const newBytes = toLittleEndianBytes(desired);
+
+        const success = findAndReplace(buffer, currentBytes, newBytes);
+
+        if (!success) {
+          alert("Couldn't find the current value in the file.");
+          return;
+        }
+
+        const blob = new Blob([buffer], { type: "application/octet-stream" });
+        const link = document.getElementById("downloadLink");
+        link.href = URL.createObjectURL(blob);
+        link.download = "modified_save.dat";
+        link.style.display = 'block';
+        link.textContent = "Download modified save";
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>
