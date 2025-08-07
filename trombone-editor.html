@@ -6,212 +6,266 @@
 <title>Trombone Champ Save Editor</title>
 <style>
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
-    margin: 0; padding: 0;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  header {
-    background-color: #4a90e2;
-    padding: 1.5rem 1rem;
-    color: white;
-    text-align: center;
-    font-weight: 700;
-    font-size: 2rem;
-    letter-spacing: 1.5px;
-  }
-  main {
-    flex-grow: 1;
+    font-family: Arial, sans-serif;
     max-width: 600px;
     margin: 2rem auto;
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgb(0 0 0 / 0.1);
+    padding: 0 1rem;
+    background: #f4f6f8;
+    color: #222;
   }
-  h2 {
-    margin-top: 0;
-    color: #4a90e2;
-    font-weight: 600;
-  }
-  p.instructions {
-    font-size: 0.95rem;
-    color: #555;
-    line-height: 1.5;
-    margin-bottom: 2rem;
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
   }
   label {
+    font-weight: bold;
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+    margin: 1rem 0 0.5rem;
   }
-  .toggle-container {
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  input[type="file"] {
+    margin-bottom: 1rem;
   }
-  .toggle-container input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+  .toggle-group {
+    margin: 1rem 0;
+    text-align: center;
+  }
+  .toggle-group label {
+    margin: 0 1rem;
+    font-weight: normal;
     cursor: pointer;
   }
-  .input-group {
-    margin-bottom: 1.8rem;
-  }
-  input[type="number"],
-  input[type="range"] {
+  input[type=range] {
     width: 100%;
-    padding: 6px 10px;
+    margin: 0.5rem 0 1rem;
+  }
+  input[type=number] {
+    width: 100%;
+    padding: 0.3rem;
     font-size: 1rem;
-    border: 1.5px solid #ccc;
-    border-radius: 6px;
     box-sizing: border-box;
-  }
-  input[type="range"] {
-    -webkit-appearance: none;
-    height: 6px;
-    background: #ddd;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-top: 6px;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    background: #4a90e2;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-top: -6px;
   }
   button {
     display: block;
     width: 100%;
-    background-color: #4a90e2;
-    color: white;
-    font-weight: 700;
-    font-size: 1.2rem;
-    padding: 1rem 0;
+    background: #4a90e2;
     border: none;
-    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    border-radius: 5px;
+    font-size: 1.1rem;
   }
-  button:hover,
-  button:focus {
-    background-color: #357abd;
-    outline: none;
+  button:disabled {
+    background: #999;
+    cursor: not-allowed;
   }
-  .footer-link {
-    text-align: center;
+  #message {
     margin-top: 1rem;
-    font-size: 0.9rem;
-  }
-  .footer-link a {
-    color: #4a90e2;
-    text-decoration: none;
-  }
-  .footer-link a:hover,
-  .footer-link a:focus {
-    text-decoration: underline;
+    text-align: center;
+    font-weight: bold;
   }
 </style>
 </head>
 <body>
-  <header>Trombone Champ Save Editor</header>
-  <main>
-    <h2>Where to find your save files</h2>
-    <p class="instructions">
-      On macOS: <br />
-      <code>/Users/yourusername/Library/Application Support/com.holywowstudios.trombonechamp/tchamp_savev100_0.dat</code> <br /><br />
-      On Windows: <br />
-      <code>C:\Users\yourusername\AppData\LocalLow\Holy Wow Studios\Trombone Champ\tchamp_savev100_0.dat</code>
-    </p>
 
-    <form id="saveEditorForm">
-      <div class="toggle-container">
-        <input type="checkbox" id="toggleToots" checked />
-        <label for="toggleToots">Edit Toots</label>
-      </div>
-      <div class="input-group">
-        <label for="tootsRange">Number of Toots</label>
-        <input type="range" id="tootsRange" min="0" max="65535" value="0" />
-        <input type="number" id="tootsInput" min="0" max="65535" value="0" />
-      </div>
+<h1>Trombone Champ Save Editor</h1>
 
-      <div class="toggle-container">
-        <input type="checkbox" id="toggleTurds" checked />
-        <label for="toggleTurds">Edit Turds</label>
-      </div>
-      <div class="input-group">
-        <label for="turdsRange">Number of Turds</label>
-        <input type="range" id="turdsRange" min="0" max="65535" value="0" />
-        <input type="number" id="turdsInput" min="0" max="65535" value="0" />
-      </div>
+<label for="fileInput">Upload your save file (.dat):</label>
+<input type="file" id="fileInput" accept=".dat" />
 
-      <button type="submit">Update Save</button>
-    </form>
+<div class="toggle-group">
+  <label>
+    <input type="radio" name="editType" value="toots" checked /> Edit Toots
+  </label>
+  <label>
+    <input type="radio" name="editType" value="turds" /> Edit Turds
+  </label>
+</div>
 
-    <div class="footer-link">
-      <a href="instructions.html">Back to Instructions</a>
-    </div>
-  </main>
+<label for="currentValue">Current Value Detected:</label>
+<input type="number" id="currentValue" readonly />
+
+<label for="newValueSlider">Set New Value:</label>
+<input type="range" id="newValueSlider" min="0" max="4294967295" value="0" step="1" />
+
+<label for="newValueInput">Or Enter New Value (0 to 4,294,967,295):</label>
+<input type="number" id="newValueInput" min="0" max="4294967295" value="0" step="1" />
+
+<button id="saveBtn" disabled>Download Edited Save</button>
+
+<div id="message"></div>
 
 <script>
-  // Sync range and number inputs for toots
-  const tootsRange = document.getElementById('tootsRange');
-  const tootsInput = document.getElementById('tootsInput');
-  tootsRange.addEventListener('input', () => {
-    tootsInput.value = tootsRange.value;
-  });
-  tootsInput.addEventListener('input', () => {
-    let val = parseInt(tootsInput.value);
-    if (isNaN(val) || val < 0) val = 0;
-    if (val > 65535) val = 65535;
-    tootsInput.value = val;
-    tootsRange.value = val;
+  const fileInput = document.getElementById('fileInput');
+  const currentValueInput = document.getElementById('currentValue');
+  const newValueSlider = document.getElementById('newValueSlider');
+  const newValueInput = document.getElementById('newValueInput');
+  const saveBtn = document.getElementById('saveBtn');
+  const message = document.getElementById('message');
+  const editTypeRadios = document.getElementsByName('editType');
+
+  let originalFile;
+  let fileBuffer;
+  let fileName;
+  let currentValueOffset = null;
+
+  // The known markers (little endian hex) for Toots and Turds in save file (4 bytes):
+  // You might need to update these offsets if the save format changes.
+  // For now, these are the byte sequences just before the 4-byte integer value:
+  const MARKERS = {
+    toots: '63757272656e63795f746f6f7473', // "currency_toots" hex
+    turds: '63757272656e63795f7475726473'  // "currency_turds" hex
+  };
+
+  // Utility to convert string hex to Uint8Array
+  function hexStringToBytes(hex) {
+    const bytes = new Uint8Array(hex.length / 2);
+    for(let i = 0; i < bytes.length; i++) {
+      bytes[i] = parseInt(hex.substr(i*2, 2), 16);
+    }
+    return bytes;
+  }
+
+  // Utility: read 4-byte LE uint from DataView at offset
+  function readUInt32LE(dataView, offset) {
+    return dataView.getUint32(offset, true);
+  }
+  // Utility: write 4-byte LE uint to DataView at offset
+  function writeUInt32LE(dataView, offset, value) {
+    dataView.setUint32(offset, value, true);
+  }
+
+  // Search for marker in array buffer, return offset of value (marker length + marker offset)
+  function findValueOffset(buffer, markerHex) {
+    const markerBytes = hexStringToBytes(markerHex);
+    const data = new Uint8Array(buffer);
+    for(let i=0; i < data.length - markerBytes.length - 4; i++) {
+      let found = true;
+      for(let j=0; j < markerBytes.length; j++) {
+        if(data[i+j] !== markerBytes[j]) {
+          found = false;
+          break;
+        }
+      }
+      if(found) {
+        // value expected to be 4 bytes after marker end
+        return i + markerBytes.length;
+      }
+    }
+    return null;
+  }
+
+  // When file is loaded, parse it and find current values
+  fileInput.addEventListener('change', e => {
+    message.textContent = '';
+    currentValueInput.value = '';
+    newValueSlider.value = 0;
+    newValueInput.value = 0;
+    saveBtn.disabled = true;
+    currentValueOffset = null;
+
+    const file = e.target.files[0];
+    if(!file) return;
+    fileName = file.name;
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      fileBuffer = ev.target.result;
+      const editType = getSelectedEditType();
+      const offset = findValueOffset(fileBuffer, MARKERS[editType]);
+
+      if(offset === null) {
+        message.textContent = `Could not find ${editType} value in save file.`;
+        currentValueOffset = null;
+        currentValueInput.value = '';
+        saveBtn.disabled = true;
+        return;
+      }
+
+      currentValueOffset = offset;
+      const dataView = new DataView(fileBuffer);
+      const currentVal = readUInt32LE(dataView, offset);
+      currentValueInput.value = currentVal;
+      newValueSlider.max = 4294967295;
+      newValueSlider.value = currentVal;
+      newValueInput.max = 4294967295;
+      newValueInput.value = currentVal;
+      saveBtn.disabled = false;
+      message.textContent = `Loaded save file: ${fileName}`;
+    }
+    reader.readAsArrayBuffer(file);
+    originalFile = file;
   });
 
-  // Sync range and number inputs for turds
-  const turdsRange = document.getElementById('turdsRange');
-  const turdsInput = document.getElementById('turdsInput');
-  turdsRange.addEventListener('input', () => {
-    turdsInput.value = turdsRange.value;
+  // Sync slider and number input
+  newValueSlider.addEventListener('input', () => {
+    newValueInput.value = newValueSlider.value;
   });
-  turdsInput.addEventListener('input', () => {
-    let val = parseInt(turdsInput.value);
-    if (isNaN(val) || val < 0) val = 0;
-    if (val > 65535) val = 65535;
-    turdsInput.value = val;
-    turdsRange.value = val;
+  newValueInput.addEventListener('input', () => {
+    let val = parseInt(newValueInput.value);
+    if(isNaN(val) || val < 0) val = 0;
+    if(val > 4294967295) val = 4294967295;
+    newValueInput.value = val;
+    newValueSlider.value = val;
   });
 
-  // Toggle enable/disable inputs
-  document.getElementById('toggleToots').addEventListener('change', (e) => {
-    const enabled = e.target.checked;
-    tootsRange.disabled = !enabled;
-    tootsInput.disabled = !enabled;
-  });
-  document.getElementById('toggleTurds').addEventListener('change', (e) => {
-    const enabled = e.target.checked;
-    turdsRange.disabled = !enabled;
-    turdsInput.disabled = !enabled;
-  });
+  // When edit type changes, reload current value from fileBuffer
+  for(let radio of editTypeRadios) {
+    radio.addEventListener('change', () => {
+      if(!fileBuffer) return;
+      const editType = getSelectedEditType();
+      const offset = findValueOffset(fileBuffer, MARKERS[editType]);
+      if(offset === null) {
+        message.textContent = `Could not find ${editType} value in save file.`;
+        currentValueOffset = null;
+        currentValueInput.value = '';
+        saveBtn.disabled = true;
+        return;
+      }
+      currentValueOffset = offset;
+      const dataView = new DataView(fileBuffer);
+      const currentVal = readUInt32LE(dataView, offset);
+      currentValueInput.value = currentVal;
+      newValueSlider.value = currentVal;
+      newValueInput.value = currentVal;
+      saveBtn.disabled = false;
+      message.textContent = `Editing ${editType}`;
+    });
+  }
 
-  // Handle form submission
-  document.getElementById('saveEditorForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    // Just placeholder behavior, you can hook your save editing logic here
-    let tootsEnabled = document.getElementById('toggleToots').checked;
-    let turdsEnabled = document.getElementById('toggleTurds').checked;
-    let tootsVal = tootsEnabled ? parseInt(tootsInput.value) : null;
-    let turdsVal = turdsEnabled ? parseInt(turdsInput.value) : null;
+  function getSelectedEditType() {
+    for(let radio of editTypeRadios) {
+      if(radio.checked) return radio.value;
+    }
+    return 'toots'; // default
+  }
 
-    alert(`Editing Save with:\nToots: ${tootsVal === null ? 'unchanged' : tootsVal}\nTurds: ${turdsVal === null ? 'unchanged' : turdsVal}`);
+  // When save button clicked, patch and download new file
+  saveBtn.addEventListener('click', () => {
+    if(currentValueOffset === null || !fileBuffer) {
+      alert('No valid value to edit.');
+      return;
+    }
+    const newVal = parseInt(newValueInput.value);
+    if(isNaN(newVal) || newVal < 0 || newVal > 4294967295) {
+      alert('Please enter a valid value between 0 and 4,294,967,295.');
+      return;
+    }
+
+    // Patch the buffer
+    const dataView = new DataView(fileBuffer);
+    writeUInt32LE(dataView, currentValueOffset, newVal);
+
+    // Save file with original name
+    const blob = new Blob([fileBuffer], {type: 'application/octet-stream'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    message.textContent = `Saved file with new value ${newVal}.`;
   });
 </script>
 
