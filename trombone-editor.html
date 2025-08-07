@@ -44,7 +44,10 @@
     background: #e0ffe0;
     border: 1px solid #8bc34a;
     border-radius: 6px;
-    display: none;
+  }
+  .download-links a {
+    display: block;
+    margin-top: 0.5rem;
   }
 </style>
 </head>
@@ -66,8 +69,11 @@
 </div>
 
 <form id="save-editor-form">
-  <label for="save-file">Select your <code>tchamp_savev100_0.dat</code> file:</label>
-  <input type="file" id="save-file" accept=".dat" required />
+  <label for="main-save-file">Select your <code>tchamp_savev100_0.dat</code> file:</label>
+  <input type="file" id="main-save-file" accept=".dat" required />
+
+  <label for="backup-save-file">Select your <code>tchamp_savev100_0_BACKUP.dat</code> file:</label>
+  <input type="file" id="backup-save-file" accept=".dat" required />
 
   <label for="toots-input">Enter new number of <strong>toots</strong>:</label>
   <input type="number" id="toots-input" min="0" max="65535" value="0" required />
@@ -75,21 +81,22 @@
   <label for="turds-input">Enter new number of <strong>turds</strong>:</label>
   <input type="number" id="turds-input" min="0" max="65535" value="0" required />
 
-  <button type="submit">Edit Save File</button>
+  <button type="submit">Edit Save Files</button>
 </form>
 
-<div class="output" id="output-message"></div>
+<div class="output" id="output-message" style="display:none;">
+  <strong>Save files edited successfully!</strong>
+  <div class="download-links" id="download-links"></div>
+</div>
 
 <script>
-  // Helper: convert number to 2-byte little endian Uint8Array
   function numberTo2BytesLE(num) {
     const buffer = new ArrayBuffer(2);
     const view = new DataView(buffer);
-    view.setUint16(0, num, true); // little endian
+    view.setUint16(0, num, true);
     return new Uint8Array(buffer);
   }
 
-  // Helper: find sequence of bytes in Uint8Array, return first index or -1
   function findBytes(haystack, needle) {
     for (let i = 0; i <= haystack.length - needle.length; i++) {
       let found = true;
@@ -104,17 +111,45 @@
     return -1;
   }
 
-  document.getElementById('save-editor-form').addEventListener('submit', function (e) {
+  function editFile(data, toots, turds) {
+    const encoder = new TextEncoder();
+    const tootsKey = encoder.encode('currency_toots');
+    const turdsKey = encoder.encode('currency_turds');
+
+    const tootsPos = findBytes(data, tootsKey);
+    const turdsPos = findBytes(data, turdsKey);
+
+    if (tootsPos === -1 || turdsPos === -1) {
+      return false;
+    }
+
+    const tootsValuePos = tootsPos + tootsKey.length + 3;
+    const turdsValuePos = turdsPos + turdsKey.length + 3;
+
+    const tootsBytes = numberTo2BytesLE(toots);
+    const turdsBytes = numberTo2BytesLE(turds);
+
+    data[tootsValuePos] = tootsBytes[0];
+    data[tootsValuePos + 1] = tootsBytes[1];
+
+    data[turdsValuePos] = turdsBytes[0];
+    data[turdsValuePos + 1] = turdsBytes[1];
+
+    return true;
+  }
+
+  document.getElementById('save-editor-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const fileInput = document.getElementById('save-file');
-    if (!fileInput.files.length) {
-      alert('Please select your save file.');
-      return;
-    }
+    const mainFileInput = document.getElementById('main-save-file');
+    const backupFileInput = document.getElementById('backup-save-file');
     const toots = parseInt(document.getElementById('toots-input').value, 10);
     const turds = parseInt(document.getElementById('turds-input').value, 10);
 
+    if (!mainFileInput.files.length || !backupFileInput.files.length) {
+      alert('Please select both save files.');
+      return;
+    }
     if (isNaN(toots) || toots < 0 || toots > 65535) {
       alert('Please enter a valid number of toots (0 - 65535).');
       return;
@@ -124,65 +159,51 @@
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function () {
-      const data = new Uint8Array(reader.result);
+    const output = document.getElementById('output-message');
+    const downloadLinks = document.getElementById('download-links');
+    downloadLinks.innerHTML = '';
+    output.style.display = 'none';
 
-      // Find the current toot and turd counts by searching for the pattern "currency_toots" and "currency_turds"
-      // Then locate the 2 bytes *after* the keyword where the value is stored (example offset 3 bytes after)
-      // These offsets might need adjustment based on actual save file format.
+    // Helper to process a file and create download link
+    function processFile(file, filenameSuffix) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function() {
+          const data = new Uint8Array(reader.result);
+          const success = editFile(data, toots, turds);
+          if (!success) {
+            reject('Could not find currency values in ' + file.name);
+            return;
+          }
+          const editedBlob = new Blob([data], { type: 'application/octet-stream' });
+          const url = URL.createObjectURL(editedBlob);
 
-      const encoder = new TextEncoder();
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = file.name.replace('.dat', filenameSuffix + '.dat');
+          link.textContent = `Download Edited ${file.name}`;
+          link.style.display = 'block';
 
-      // Search keys as bytes
-      const tootsKey = encoder.encode('currency_toots');
-      const turdsKey = encoder.encode('currency_turds');
+          link.addEventListener('click', () => {
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+          });
 
-      const tootsPos = findBytes(data, tootsKey);
-      const turdsPos = findBytes(data, turdsKey);
-
-      if (tootsPos === -1 || turdsPos === -1) {
-        alert('Could not find "currency_toots" or "currency_turds" in save file. This editor may not support your save format.');
-        return;
-      }
-
-      // Assuming values stored a few bytes after the key (usually 3 bytes offset; adjust if needed)
-      const tootsValuePos = tootsPos + tootsKey.length + 3;
-      const turdsValuePos = turdsPos + turdsKey.length + 3;
-
-      // Replace values with user input in little endian 2 bytes
-      const tootsBytes = numberTo2BytesLE(toots);
-      const turdsBytes = numberTo2BytesLE(turds);
-
-      data[tootsValuePos] = tootsBytes[0];
-      data[tootsValuePos + 1] = tootsBytes[1];
-
-      data[turdsValuePos] = turdsBytes[0];
-      data[turdsValuePos + 1] = turdsBytes[1];
-
-      // Create new Blob and download
-      const editedBlob = new Blob([data], { type: 'application/octet-stream' });
-      const url = URL.createObjectURL(editedBlob);
-
-      const downloadLink = document.createElement('a');
-      downloadLink.href = url;
-      downloadLink.download = fileInput.files[0].name.replace('.dat', '_edited.dat');
-      downloadLink.textContent = 'Download Edited Save File';
-      downloadLink.style.display = 'block';
-      downloadLink.style.marginTop = '1rem';
-
-      const output = document.getElementById('output-message');
-      output.innerHTML = '<strong>Save file edited successfully!</strong><br />';
-      output.appendChild(downloadLink);
-      output.style.display = 'block';
-
-      // Clean up URL object when link is clicked
-      downloadLink.addEventListener('click', () => {
-        setTimeout(() => URL.revokeObjectURL(url), 100);
+          resolve(link);
+        };
+        reader.onerror = () => reject('Failed to read file: ' + file.name);
+        reader.readAsArrayBuffer(file);
       });
-    };
+    }
 
-    reader.readAsArrayBuffer(fileInput.files[0]);
+    Promise.all([
+      processFile(mainFileInput.files[0], '_edited'),
+      processFile(backupFileInput.files[0], '_backup_edited')
+    ]).then(links => {
+      links.forEach(link => downloadLinks.appendChild(link));
+      output.style.display = 'block';
+    }).catch(err => {
+      alert(err);
+    });
   });
 </script>
 
