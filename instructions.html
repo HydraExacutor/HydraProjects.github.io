@@ -1,59 +1,106 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Trombone Champ Save File Instructions</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            padding: 2em;
-            line-height: 1.6;
-        }
-        h1 {
-            text-align: center;
-            color: #222;
-        }
-        pre {
-            background: #e0e0e0;
-            padding: 1em;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hydra Projects - Trombone Champ Save Editor Instructions</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0a0a23;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 2rem;
+  }
+  h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #42a5f5;
+    font-weight: 700;
+  }
+  .btn-group {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  button {
+    background: #1a1a3b;
+    border: none;
+    color: #42a5f5;
+    font-size: 1.2rem;
+    padding: 0.6rem 1.4rem;
+    margin: 0 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #2f51a4;
+  }
+  section {
+    max-width: 700px;
+    margin: 2rem auto;
+    background: #121240;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #1a237e;
+  }
+  h2 {
+    color: #90caf9;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #42a5f5;
+    padding-bottom: 0.5rem;
+  }
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  code {
+    background: #1e1e5c;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+</style>
 </head>
 <body>
-    <h1>🎺 Trombone Champ Save File Instructions</h1>
-    <p>We edit <strong>both</strong> of these files:</p>
-    <ul>
-        <li><code>tchamp_savev100_0.dat</code></li>
-        <li><code>tchamp_savev100_0_BACKUP.dat</code></li>
-    </ul>
 
-    <h2>🖥 For Mac Users:</h2>
-    <p>File location:</p>
-    <pre>~/Library/Application Support/com.holywowstudios.trombonechamp/</pre>
-    <p>To get there quickly:</p>
-    <ol>
-        <li>Open <strong>Finder</strong></li>
-        <li>Press <strong>Command + Shift + G</strong></li>
-        <li>Paste this path:</li>
-        <pre>~/Library/Application Support/com.holywowstudios.trombonechamp/</pre>
-        <li>Press <strong>Go</strong></li>
-    </ol>
+<h1>Hydra Projects</h1>
 
-    <h2>🪟 For Windows Users:</h2>
-    <p>File location:</p>
-    <pre>C:\Users\&lt;YourUsername&gt;\AppData\LocalLow\Holy Wow Studios\Trombone Champ\</pre>
-    <p>To get there quickly:</p>
-    <ol>
-        <li>Open <strong>File Explorer</strong></li>
-        <li>Paste this into the address bar and press Enter:</li>
-        <pre>%AppData%\..\LocalLow\Holy Wow Studios\Trombone Champ\</pre>
-    </ol>
+<div class="btn-group">
+  <button onclick="scrollToSection('mac')">Mac Instructions</button>
+  <button onclick="scrollToSection('windows')">Windows Instructions</button>
+</div>
 
-    <p>We make sure to edit <strong>both files</strong> so changes work properly!</p>
+<section id="mac">
+  <h2>Mac Instructions</h2>
+  <p>First, open <strong>Trombone Champ</strong> and check your current number of toots and turds.</p>
+  <p>On this website, click “Upload” and upload both your <code>tchamp_savev100_0.dat</code> and <code>tchamp_savev100_0_BACKUP.dat</code> files.</p>
+  <p>These files are usually located at:<br>
+    <code>/Users/yourusername/Library/Application Support/com.holywowstudios.trombonechamp/</code></p>
+  <p>We recommend backing up these files before editing, just in case.</p>
+  <p>Next, input the desired number of toots and turds you want, then click “Download Edited Save Files.”</p>
+  <p>After downloading, go back to your save file folder and replace the old files with the new ones you just downloaded.</p>
+  <p>Finally, load up Trombone Champ again and enjoy your updated save!</p>
+</section>
+
+<section id="windows">
+  <h2>Windows Instructions</h2>
+  <p>First, launch <strong>Trombone Champ</strong> and find your current number of toots and turds.</p>
+  <p>On this website, click “Upload” and select both your <code>tchamp_savev100_0.dat</code> and <code>tchamp_savev100_0_BACKUP.dat</code> files.</p>
+  <p>These files are typically located in:<br>
+    <code>C:\Users\yourusername\AppData\LocalLow\Holy Wow Studios\TromboneChamp\</code></p>
+  <p>It’s a good idea to back up these files before making changes.</p>
+  <p>Then, enter how many toots and turds you want, and click “Download Edited Save Files.”</p>
+  <p>Once downloaded, replace the original save files in the folder with these new ones.</p>
+  <p>Start Trombone Champ again and enjoy your updated progress!</p>
+</section>
+
+<script>
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
 </body>
 </html>
