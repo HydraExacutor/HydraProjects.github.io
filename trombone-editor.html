@@ -1,368 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Trombone Champ Save Editor</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: auto;
-    padding: 1rem;
-    background: #f9f9f9;
-  }
-  h1, h2 {
-    text-align: center;
-  }
-  .instructions {
-    margin-bottom: 2rem;
-    padding: 1rem;
-    background: #f0f0f0;
-    border-radius: 8px;
-  }
-  label {
-    display: block;
-    margin-top: 1rem;
-    font-weight: bold;
-  }
-  input[type="file"],
-  input[type="number"],
-  input[type="range"] {
-    width: 100%;
-    padding: 0.3rem;
-    margin-top: 0.3rem;
-  }
-  .flex-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-  .flex-row > * {
-    flex: 1;
-  }
-  .checkbox-label {
-    flex: 0 0 auto;
-    font-weight: normal;
-  }
-  button {
-    margin-top: 1.5rem;
-    padding: 0.7rem 1.2rem;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 100%;
-  }
-  .output {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #e0ffe0;
-    border: 1px solid #8bc34a;
-    border-radius: 6px;
-  }
-  .download-links a {
-    display: block;
-    margin-top: 0.5rem;
-  }
-  .error {
-    background: #ffe0e0;
-    border: 1px solid #e04848;
-    padding: 0.5rem;
-    margin-top: 1rem;
-    border-radius: 6px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trombone Champ Save Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      text-align: center;
+    }
+    input[type="number"] {
+      width: 80px;
+    }
+    .file-upload {
+      margin: 10px 0;
+    }
+    .section {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    label {
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Trombone Champ Save Editor</h1>
 
-<h1>Trombone Champ Save Editor</h1>
-
-<div class="instructions">
-  <h2>Where to find your save files (.dat)</h2>
-  <p>
-    For <strong>Mac</strong>, look here:<br />
-    <code>/Users/your-username/Library/Application Support/com.holywowstudios.trombonechamp/</code><br /><br />
-    For <strong>Windows</strong>, look here:<br />
-    <code>C:\Users\your-username\AppData\LocalLow\Holy Wow Studios\Trombone Champ\</code>
-  </p>
-  <p>
-    <a href="instructions.html">Click here for detailed editing instructions</a>
-  </p>
-</div>
-
-<form id="save-editor-form">
-
-  <label for="main-save-file">Select your <code>tchamp_savev100_0.dat</code> file:</label>
-  <input type="file" id="main-save-file" accept=".dat" required />
-
-  <label for="backup-save-file">Select your <code>tchamp_savev100_0_BACKUP.dat</code> file:</label>
-  <input type="file" id="backup-save-file" accept=".dat" required />
-
-  <hr />
-
-  <div>
-    <label><input type="checkbox" id="edit-toots" checked /> Edit Toots</label>
-    <div id="toots-controls">
-      <label for="current-toots">Current number of toots (required):</label>
-      <input type="number" id="current-toots" min="0" max="65535" value="0" required />
-
-      <label for="toots-slider">Set new number of toots:</label>
-      <div class="flex-row">
-        <input type="range" id="toots-slider" min="0" max="65535" value="0" />
-        <input type="number" id="toots-new" min="0" max="65535" value="0" />
-      </div>
-    </div>
+  <div class="section">
+    <h3>Upload Save Files</h3>
+    <input type="file" id="mainFile" class="file-upload" /><br />
+    <input type="file" id="backupFile" class="file-upload" />
   </div>
 
-  <div style="margin-top:1rem;">
-    <label><input type="checkbox" id="edit-turds" checked /> Edit Turds</label>
-    <div id="turds-controls">
-      <label for="current-turds">Current number of turds (required):</label>
-      <input type="number" id="current-turds" min="0" max="65535" value="0" required />
+  <div class="section">
+    <h3>Edit Options</h3>
+    <label><input type="checkbox" id="editToots" checked /> Edit Toots</label>
+    <label><input type="checkbox" id="editTurds" /> Edit Turds</label><br /><br />
 
-      <label for="turds-slider">Set new number of turds:</label>
-      <div class="flex-row">
-        <input type="range" id="turds-slider" min="0" max="65535" value="0" />
-        <input type="number" id="turds-new" min="0" max="65535" value="0" />
-      </div>
-    </div>
+    <label>Current Toots:</label>
+    <input type="number" id="currentToots" min="0" />
+    <label>New Toots:</label>
+    <input type="range" id="newTootsRange" min="0" max="9999999" value="10000" />
+    <input type="number" id="newToots" value="10000" /><br /><br />
+
+    <label>Current Turds:</label>
+    <input type="number" id="currentTurds" min="0" />
+    <label>New Turds:</label>
+    <input type="range" id="newTurdsRange" min="0" max="9999999" value="10000" />
+    <input type="number" id="newTurds" value="10000" />
   </div>
 
-  <button type="submit">Edit Save Files</button>
-</form>
+  <div class="section">
+    <button onclick="processFile()">Apply Changes & Download</button>
+    <p id="status"></p>
+  </div>
 
-<div class="output" id="output-message" style="display:none;">
-  <strong>Save files edited successfully!</strong>
-  <div class="download-links" id="download-links"></div>
-</div>
-
-<div id="error-message" class="error" style="display:none;"></div>
-
-<script>
-  // Helpers
-  function numberTo2BytesLE(num) {
-    const buffer = new ArrayBuffer(2);
-    const view = new DataView(buffer);
-    view.setUint16(0, num, true);
-    return new Uint8Array(buffer);
-  }
-
-  function numberFrom2BytesLE(data, offset) {
-    const view = new DataView(data.buffer, data.byteOffset + offset, 2);
-    return view.getUint16(0, true);
-  }
-
-  // Find all occurrences of needle Uint8Array in haystack Uint8Array
-  function findBytes(haystack, needle) {
-    for (let i = 0; i <= haystack.length - needle.length; i++) {
-      let found = true;
-      for (let j = 0; j < needle.length; j++) {
-        if (haystack[i + j] !== needle[j]) {
-          found = false;
-          break;
-        }
-      }
-      if (found) return i;
+  <script>
+    function toLittleEndianBytes(num) {
+      const arr = new Uint8Array(4);
+      const view = new DataView(arr.buffer);
+      view.setUint32(0, num, true);
+      return Array.from(arr);
     }
-    return -1;
-  }
 
-  // Edit a single file Uint8Array
-  // currentValues = { toots: number|null, turds: number|null }
-  // newValues = { toots: number|null, turds: number|null }
-  function editFile(data, currentValues, newValues) {
-    const encoder = new TextEncoder();
-    const tootsKey = encoder.encode('currency_toots');
-    const turdsKey = encoder.encode('currency_turds');
+    function findAndReplace(buffer, currentValue, newValue) {
+      const curBytes = toLittleEndianBytes(currentValue);
+      const newBytes = toLittleEndianBytes(newValue);
 
-    let errors = [];
-
-    // Find and check toots
-    if (currentValues.toots !== null) {
-      const pos = findBytes(data, tootsKey);
-      if (pos === -1) {
-        errors.push('currency_toots key not found');
-      } else {
-        const valuePos = pos + tootsKey.length + 3; // offset past key and delimiter
-        const currentStored = numberFrom2BytesLE(data, valuePos);
-        if (currentStored !== currentValues.toots) {
-          errors.push(`Toots value in file (${currentStored}) does not match current input (${currentValues.toots})`);
-        } else if (newValues.toots !== null) {
-          const bytes = numberTo2BytesLE(newValues.toots);
-          data[valuePos] = bytes[0];
-          data[valuePos + 1] = bytes[1];
+      for (let i = 0; i <= buffer.length - 4; i++) {
+        if (
+          buffer[i] === curBytes[0] &&
+          buffer[i + 1] === curBytes[1] &&
+          buffer[i + 2] === curBytes[2] &&
+          buffer[i + 3] === curBytes[3]
+        ) {
+          buffer.set(newBytes, i);
         }
       }
     }
 
-    // Find and check turds
-    if (currentValues.turds !== null) {
-      const pos = findBytes(data, turdsKey);
-      if (pos === -1) {
-        errors.push('currency_turds key not found');
-      } else {
-        const valuePos = pos + turdsKey.length + 3;
-        const currentStored = numberFrom2BytesLE(data, valuePos);
-        if (currentStored !== currentValues.turds) {
-          errors.push(`Turds value in file (${currentStored}) does not match current input (${currentValues.turds})`);
-        } else if (newValues.turds !== null) {
-          const bytes = numberTo2BytesLE(newValues.turds);
-          data[valuePos] = bytes[0];
-          data[valuePos + 1] = bytes[1];
-        }
-      }
-    }
-
-    if (errors.length > 0) return errors;
-    return null;
-  }
-
-  // UI Elements
-  const editTootsCheckbox = document.getElementById('edit-toots');
-  const editTurdsCheckbox = document.getElementById('edit-turds');
-  const tootsControls = document.getElementById('toots-controls');
-  const turdsControls = document.getElementById('turds-controls');
-
-  function toggleControls() {
-    tootsControls.style.display = editTootsCheckbox.checked ? 'block' : 'none';
-    turdsControls.style.display = editTurdsCheckbox.checked ? 'block' : 'none';
-  }
-
-  editTootsCheckbox.addEventListener('change', toggleControls);
-  editTurdsCheckbox.addEventListener('change', toggleControls);
-  toggleControls();
-
-  // Sync slider and textbox for toots
-  const tootsSlider = document.getElementById('toots-slider');
-  const tootsNewInput = document.getElementById('toots-new');
-  tootsSlider.addEventListener('input', () => {
-    tootsNewInput.value = tootsSlider.value;
-  });
-  tootsNewInput.addEventListener('input', () => {
-    let val = Number(tootsNewInput.value);
-    if (isNaN(val)) val = 0;
-    if (val < 0) val = 0;
-    if (val > 65535) val = 65535;
-    tootsNewInput.value = val;
-    tootsSlider.value = val;
-  });
-
-  // Sync slider and textbox for turds
-  const turdsSlider = document.getElementById('turds-slider');
-  const turdsNewInput = document.getElementById('turds-new');
-  turdsSlider.addEventListener('input', () => {
-    turdsNewInput.value = turdsSlider.value;
-  });
-  turdsNewInput.addEventListener('input', () => {
-    let val = Number(turdsNewInput.value);
-    if (isNaN(val)) val = 0;
-    if (val < 0) val = 0;
-    if (val > 65535) val = 65535;
-    turdsNewInput.value = val;
-    turdsSlider.value = val;
-  });
-
-  document.getElementById('save-editor-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const mainFileInput = document.getElementById('main-save-file');
-    const backupFileInput = document.getElementById('backup-save-file');
-    const errorDiv = document.getElementById('error-message');
-    const output = document.getElementById('output-message');
-    const downloadLinks = document.getElementById('download-links');
-
-    errorDiv.style.display = 'none';
-    output.style.display = 'none';
-    downloadLinks.innerHTML = '';
-
-    if (!mainFileInput.files.length || !backupFileInput.files.length) {
-      errorDiv.textContent = 'Please select both save files.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    const editToots = editTootsCheckbox.checked;
-    const editTurds = editTurdsCheckbox.checked;
-
-    // Get current input values or null if not editing
-    const currentTootsVal = editToots ? parseInt(document.getElementById('current-toots').value, 10) : null;
-    const currentTurdsVal = editTurds ? parseInt(document.getElementById('current-turds').value, 10) : null;
-
-    if (editToots && (isNaN(currentTootsVal) || currentTootsVal < 0 || currentTootsVal > 65535)) {
-      errorDiv.textContent = 'Please enter a valid current toots number (0-65535).';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    if (editTurds && (isNaN(currentTurdsVal) || currentTurdsVal < 0 || currentTurdsVal > 65535)) {
-      errorDiv.textContent = 'Please enter a valid current turds number (0-65535).';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    // Get new input values or null if not editing
-    const newTootsVal = editToots ? parseInt(document.getElementById('toots-new').value, 10) : null;
-    const newTurdsVal = editTurds ? parseInt(document.getElementById('turds-new').value, 10) : null;
-
-    // Check new values valid
-    if (editToots && (isNaN(newTootsVal) || newTootsVal < 0 || newTootsVal > 65535)) {
-      errorDiv.textContent = 'Please enter a valid new toots number (0-65535).';
-      errorDiv.style.display = 'block';
-      return;
-    }
-    if (editTurds && (isNaN(newTurdsVal) || newTurdsVal < 0 || newTurdsVal > 65535)) {
-      errorDiv.textContent = 'Please enter a valid new turds number (0-65535).';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    // Read and process files
-    function processFile(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = function() {
-          const data = new Uint8Array(reader.result);
-          const errors = editFile(
-            data,
-            { toots: editToots ? currentTootsVal : null, turds: editTurds ? currentTurdsVal : null },
-            { toots: editToots ? newTootsVal : null, turds: editTurds ? newTurdsVal : null }
-          );
-          if (errors) {
-            reject('Error in file "' + file.name + '": ' + errors.join('; '));
-            return;
-          }
-          const editedBlob = new Blob([data], { type: 'application/octet-stream' });
-          const url = URL.createObjectURL(editedBlob);
-
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = file.name; // keep original filename
-          link.textContent = `Download Edited ${file.name}`;
-          link.style.display = 'block';
-
-          link.addEventListener('click', () => {
-            setTimeout(() => URL.revokeObjectURL(url), 100);
-          });
-
-          resolve(link);
-        };
-        reader.onerror = () => reject('Failed to read file: ' + file.name);
-        reader.readAsArrayBuffer(file);
-      });
-    }
-
-    Promise.all([
-      processFile(mainFileInput.files[0]),
-      processFile(backupFileInput.files[0])
-    ]).then(links => {
-      links.forEach(link => downloadLinks.appendChild(link));
-      output.style.display = 'block';
-    }).catch(err => {
-      errorDiv.textContent = err;
-      errorDiv.style.display = 'block';
+    document.getElementById("newTootsRange").addEventListener("input", e => {
+      document.getElementById("newToots").value = e.target.value;
+    });
+    document.getElementById("newToots").addEventListener("input", e => {
+      document.getElementById("newTootsRange").value = e.target.value;
     });
 
-  });
-</script>
+    document.getElementById("newTurdsRange").addEventListener("input", e => {
+      document.getElementById("newTurds").value = e.target.value;
+    });
+    document.getElementById("newTurds").addEventListener("input", e => {
+      document.getElementById("newTurdsRange").value = e.target.value;
+    });
 
+    async function processFile() {
+      const mainFile = document.getElementById("mainFile").files[0];
+      const backupFile = document.getElementById("backupFile").files[0];
+
+      if (!mainFile || !backupFile) {
+        alert("Please upload both files.");
+        return;
+      }
+
+      const editToots = document.getElementById("editToots").checked;
+      const editTurds = document.getElementById("editTurds").checked;
+      const currentToots = parseInt(document.getElementById("currentToots").value);
+      const currentTurds = parseInt(document.getElementById("currentTurds").value);
+      const newToots = parseInt(document.getElementById("newToots").value);
+      const newTurds = parseInt(document.getElementById("newTurds").value);
+
+      if ((editToots && isNaN(currentToots)) || (editTurds && isNaN(currentTurds))) {
+        alert("Please enter your current toots/turds exactly.");
+        return;
+      }
+
+      const files = [mainFile, backupFile];
+
+      for (let file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const byteArray = new Uint8Array(arrayBuffer);
+
+        if (editToots) findAndReplace(byteArray, currentToots, newToots);
+        if (editTurds) findAndReplace(byteArray, currentTurds, newTurds);
+
+        const blob = new Blob([byteArray]);
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = file.name;
+        a.click();
+      }
+
+      document.getElementById("status").innerText = "✅ Done! Your files should be downloading.";
+    }
+  </script>
 </body>
 </html>
