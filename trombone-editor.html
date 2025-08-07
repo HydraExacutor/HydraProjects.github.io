@@ -123,6 +123,7 @@
       return false;
     }
 
+    // +3 is offset past the key and some delimiter (adjust if needed)
     const tootsValuePos = tootsPos + tootsKey.length + 3;
     const turdsValuePos = turdsPos + turdsKey.length + 3;
 
@@ -164,8 +165,7 @@
     downloadLinks.innerHTML = '';
     output.style.display = 'none';
 
-    // Helper to process a file and create download link
-    function processFile(file, filenameSuffix) {
+    function processFile(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = function() {
@@ -180,7 +180,7 @@
 
           const link = document.createElement('a');
           link.href = url;
-          link.download = file.name.replace('.dat', filenameSuffix + '.dat');
+          link.download = file.name;  // KEEP original filename exactly
           link.textContent = `Download Edited ${file.name}`;
           link.style.display = 'block';
 
@@ -196,8 +196,8 @@
     }
 
     Promise.all([
-      processFile(mainFileInput.files[0], '_edited'),
-      processFile(backupFileInput.files[0], '_backup_edited')
+      processFile(mainFileInput.files[0]),
+      processFile(backupFileInput.files[0])
     ]).then(links => {
       links.forEach(link => downloadLinks.appendChild(link));
       output.style.display = 'block';
